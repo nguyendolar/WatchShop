@@ -26,7 +26,7 @@ namespace WebShop.Models
         [StringLength(500)]
         public string Address { get; set; }
 
-        [StringLength(10)]
+        [StringLength(100)]
         public string Status { get; set; }
 
         public DateTime? CreateDate { get; set; }

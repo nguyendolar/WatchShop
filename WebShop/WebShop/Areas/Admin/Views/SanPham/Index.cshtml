@@ -20,20 +20,47 @@
 
             <div class="w3l-calendar-left">
                 <div class="calendar-heading">
-                    <!-- 									<p>Noi dung</p>
-                     -->
+                    @if (ViewBag.mes != null)
+                    {
+                        if (ViewBag.mes == "1")
+                        {
+                    <script>
+                      swal({
+                        title: 'Thành công!',
+                        /* text: 'Redirecting...', */
+                        icon: 'success',
+                        timer: 3000,
+                        buttons: true,
+                        type: 'success'
+                      })
+                    </script>
+                        }
+                        else
+                        {
+                <script>
+                    swal({
+                        title: 'Sản phẩm đang có người đặt. Không thể xóa!',
+                        /* text: 'Redirecting...', */
+                        icon: 'error',
+                        timer: 3000,
+                        buttons: true,
+                        type: 'error'
+                    })
+                </script>
+                        }
+                    }
+                   
                     <div class="agile-tables">
                         <div class="w3l-table-info">
-
-
-                                    <form action="">
-                                        <button type="submit" class="btn btn-default">Thêm sản phẩm</button>
-                                    </form>
+                            <button type="button" class="btn btn-info" data-toggle="modal"
+                                    data-target="#exampleModalAdd">
+                                Thêm mới
+                            </button>
                             <table id="table">
                                 <thead>
                                     <tr>
                                         <th>Mã sản phẩm</th>
-                                        <th>   Ảnh</th>
+                                        <th>Ảnh</th>
                                         <th>Tên sản phẩm</th>
                                         <th>Giá bán</th>
                                         <th>Số lượng</th>
@@ -41,56 +68,218 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @foreach (Product item in Model)
-                                {
-                                    <tr class="info">
-                                        <td>@item.ID_Product</td>
-                                        <td><img src="/Content/images/@item.Avatar" alt="Image placeholder" style="text-align: center;" height="80" width="80" class="img-fluid"></td>
-                                        <td>@item.Name</td>
-                                        <td>@String.Format("{0:0,0 VNĐ}", item.Price)</td>
-                                        <td>@item.Quantity</td>
-                                        <td style="text-align: center;">
-                                            <span>
-                                                <a class="agile-icon" href="/Admin/SanPham/Edit/@item.ID_Product" data-toggle="modal" data-target="#myModal"><i class="fa fa-pencil-square-o"></i></a>
-                                            </span>
-                                            <span>
-                                                <a class="agile-icon" href="#" data-toggle="modal" data-target="#myModal1"><i class="fa fa-times-circle"></i></a>
-                                            </span>
+                                    @foreach (Product item in Model)
+                                    {
+                                        <tr class="info">
+                                            <td>@item.ID_Product</td>
+                                            <td><img src="/Content/images/@item.Avatar" alt="Image placeholder" style="text-align: center;" height="80" width="80" class="img-fluid"></td>
+                                            <td>@item.Name</td>
+                                            <td>@String.Format("{0:0,0 VNĐ}", item.Price)</td>
+                                            <td>@item.Quantity</td>
+                                            @{
+                                                var nameModalDelete = "myModal1" + item.ID_Product;
+                                                var nameModalEdit = "exampleModalEdit" + item.ID_Product;
+                                            }
+                                            <td style="text-align: center;">
+                                                <span>
+                                                    <a class="agile-icon" href="#" data-toggle="modal" data-target="#@nameModalEdit"><i class="fa fa-pencil-square-o"></i></a>
+                                                </span>
+                                                <span>
+                                                    <a class="agile-icon" href="#" data-toggle="modal" data-target="#@nameModalDelete"><i class="fa fa-times-circle"></i></a>
+                                                </span>
 
-                                        </td>
-                                    </tr>
-                                }
+                                            </td>
+                                        </tr>
+                                        <!-- Modal Add-->
+                                        <div class="modal fade" id="@nameModalEdit" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        <h4 class="modal-title">Cập nhập sản phẩm</h4>
+                                                    </div>
+                                                    <form action="/SanPham/Update/" enctype="multipart/form-data" method="post">
+                                                        <input type="hidden" class="form-control" name="id" value="@item.ID_Product" required>
+                                                        <input type="hidden" class="form-control" name="ava" value="@item.Avatar" required>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label for="ma">Tên sản phẩm:</label>
+                                                                <input type="text" class="form-control" name="name" value="@item.Name" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="ten">Giá tiền:</label>
+                                                                <input type="number" class="form-control" name="price" value="@item.Price" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="ma">Số lượng:</label>
+                                                                <input type="number" class="form-control" name="quatity" value="@item.Quantity" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="ten">Màu:</label>
+                                                                <input type="text" class="form-control" name="color" value="@item.Color" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="ma">Khuyến mãi:</label>
+                                                                <input type="number" class="form-control" name="discount" value="@item.Discount">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="ten">MetaTitle:</label>
+                                                                <input type="text" class="form-control" name="metatitle" value="@item.Metatitle">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="ten">Ảnh:</label>
+                                                                <input type="file" class="form-control" name="file">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="ma">Loại sản phẩm:</label>
+                                                                <select id="c_country" class="form-control" name="trademark">
+                                                                    <option value="@item.ID_Trademark">@item.Trademark.Name</option>
+                                                                    @foreach (var item1 in ViewBag.List)
+                                                                    {
+                                                                        <option value="@item1.ID_Trademark">@item1.Name</option>
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="ten">Chương trình khuyến mãi:</label>
+                                                                <select id="c_country" class="form-control" name="promotion">
+                                                                    <option value="@item.ID_Promotion">@item.Promotion.Name</option>
+                                                                    @foreach (var item2 in ViewBag.Pro)
+                                                                    {
+                                                                        <option value="@item2.ID_Promotion">@item2.Name</option>
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="comment">Mô tả:</label>
+                                                                <textarea class="form-control" rows="5"
+                                                                          id="comment" name="des">@item.Description</textarea>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="comment">Chi tiết:</label>
+                                                                <textarea class="form-control" rows="5"
+                                                                          id="comment" name="content">@item.Content</textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-default">
+                                                                Cập nhập
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="@nameModalDelete" role="dialog">
+                                            <div class="modal-dialog">
+
+                                                <!-- Modal content-->
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        <h4 class="modal-title">Bạn có chắc chắn muốn xóa hay không?</h4>
+                                                    </div>
+                                                    <form action="/SanPham/Delete/@item.ID_Product">
+                                                        <div class="modal-body">
+                                                            Sản phẩm : @item.Name
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-default">
+                                                                Xóa
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
                                 </tbody>
                             </table>
-                        </div>
-                        <!-- Modal -->
-                                <!-- Modal content-->
-                        <!-- end mymodal -->
-                        <!-- sanpham -->
-                        <!-- Modal -->
-                        <div class="modal fade" id="myModal1" role="dialog">
-                            <div class="modal-dialog">
-
-                                <!-- Modal content-->
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">Bạn có chắc chắn muốn xóa hay không?</h4>
-                                    </div>
-                                    <div class="modal-body">
-
-                                        <form action="">
-                                            <button type="submit" class="btn btn-default" style="margin-left: 43%;">
-                                                Xóa
-                                            </button>
+                            <!-- Modal Add-->
+                            <div class="modal fade" id="exampleModalAdd" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Thêm mới sản phẩm</h4>
+                                        </div>
+                                        <form action="/SanPham/Add/" enctype="multipart/form-data" method="post">
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="ma">Tên sản phẩm:</label>
+                                                    <input type="text" class="form-control" name="name" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ten">Giá tiền:</label>
+                                                    <input type="number" class="form-control" name="price" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ma">Số lượng:</label>
+                                                    <input type="number" class="form-control" name="quatity" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ten">Màu:</label>
+                                                    <input type="text" class="form-control" name="color" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ma">Khuyến mãi:</label>
+                                                    <input type="number" class="form-control" name="discount">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ten">MetaTitle:</label>
+                                                    <input type="text" class="form-control" name="metatitle">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ten">Ảnh:</label>
+                                                    <input type="file" class="form-control" name="file" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ma">Loại sản phẩm:</label>
+                                                    <select id="c_country" class="form-control" name="trademark">
+                                                        @foreach (var item1 in ViewBag.List)
+                                                        {
+                                                            <option value="@item1.ID_Trademark">@item1.Name</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ten">Chương trình khuyến mãi:</label>
+                                                    <select id="c_country" class="form-control" name="promotion">
+                                                        @foreach (var item2 in ViewBag.Pro)
+                                                        {
+                                                            <option value="@item2.ID_Promotion">@item2.Name</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="comment">Mô tả:</label>
+                                                    <textarea class="form-control" rows="5"
+                                                              id="comment" name="des"></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="comment">Chi tiết:</label>
+                                                    <textarea class="form-control" rows="5"
+                                                              id="comment" name="content"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-default">
+                                                    Thêm
+                                                </button>
+                                            </div>
                                         </form>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    </div>
                                 </div>
-
                             </div>
+                            <!-- Modal -->
+                            <!-- Modal content-->
+                            <!-- end mymodal -->
+                            <!-- sanpham -->
+                            <!-- Modal -->
+
                         </div>
                         <!-- end modal sanpham -->
                     </div>

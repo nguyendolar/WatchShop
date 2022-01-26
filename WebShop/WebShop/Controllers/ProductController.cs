@@ -216,5 +216,13 @@ namespace WebShop.Controllers
                 return View();
             }
         }
+        //getCate
+        public List<Trademark> getList()
+        {
+            using (var con = new MyDBContext())
+            {
+                return con.Category.ToList();
+            }
+        }
     }
 }

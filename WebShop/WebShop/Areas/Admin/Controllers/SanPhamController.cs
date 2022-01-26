@@ -11,11 +11,14 @@ namespace WebShop.Areas.Admin.Controllers
     {
         // GET: Admin/ProductAdmin
         [CustomAuthorize(Roles = "admin")]
-        public ActionResult Index()
+        public ActionResult Index(string mess)
         {
             using (var con = new MyDBContext())
             {
-                var model = con.Products.ToList();
+                ViewBag.mes = mess;
+                ViewBag.List = con.Category.ToList();
+                ViewBag.Pro = con.Promotions.ToList();
+                var model = con.Products.OrderByDescending(p => p.CreateDate).ToList();
                 return View(model);
             }
         }
@@ -104,30 +107,84 @@ namespace WebShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/ProductAdmin/Delete/5
-        public ActionResult Delete(int id, string Message)
+        public ActionResult Delete(int id)
         {
-            try
+            var con = new MyDBContext();
+            var check = con.OrderDetails.FirstOrDefault(o => o.ID_Product == id);
+            if (check != null)
             {
-                using (var con = new MyDBContext())
-                {
-                    var obj = con.Products.FirstOrDefault(x => x.ID_Product == id);
-                    if (obj != null)
-                    {
-                        con.Products.Remove(obj);
-                        con.SaveChanges();
-                    }
-                    ViewBag.Message = "Removed!!!";
-                    return RedirectToAction("Index");
-
-                }
+                return Redirect("/Admin/SanPham?mess=2");
             }
-            catch
+            else
             {
-                ViewBag.Message = "Remove Failed!!!";
-                return Redirect("/Admin/SanPham/Index");
+                var obj = con.Products.FirstOrDefault(x => x.ID_Product == id);
+                con.Products.Remove(obj);
+                con.SaveChanges();
+                return Redirect("/Admin/SanPham?mess=1");
             }
         }
+        //Add Product
 
+        public ActionResult Add(FormCollection form)
+        {
+            var con = new MyDBContext();
+            Product product = new Product();
+            var file = Request.Files["file"];
+            //Lấy thông tin từ input type=file có tên Avatar
+            string postedFileName = System.IO.Path.GetFileName(file.FileName);
+            //Lưu hình đại diện về Server
+            var path = Server.MapPath("/Content/images/" + postedFileName);
+            file.SaveAs(path);
+            product.Avatar = postedFileName;
+            product.Price = Int32.Parse(form["price"]);
+            product.Quantity = Int32.Parse(form["quatity"]);
+            product.Name =form["name"];
+            product.Discount = Int32.Parse(form["discount"]);
+            product.Color = form["color"];
+            product.Metatitle = form["metatitle"];
+            product.ID_Trademark = Int32.Parse(form["trademark"]);
+            product.ID_Promotion = Int32.Parse(form["promotion"]);
+            product.Description = form["des"];
+            product.Content = form["content"];
+            product.CreateDate = DateTime.Now;
+            con.Products.Add(product);
+            con.SaveChanges();
+            return Redirect("/Admin/SanPham?mess=1");
+        }
+        //Update
+        public ActionResult Update(FormCollection form)
+        {
+            var con = new MyDBContext();
+            var id = Int32.Parse(form["id"]);
+            Product product = con.Products.FirstOrDefault(p => p.ID_Product == id);
+            var file = Request.Files["file"];
+            string postedFileName = null;
+            if (file.FileName != "")
+            {
+                //Lấy thông tin từ input type=file có tên Avatar
+                postedFileName = System.IO.Path.GetFileName(file.FileName);
+                //Lưu hình đại diện về Server
+                var path = Server.MapPath("/Content/images/" + postedFileName);
+                file.SaveAs(path);
+            }
+            else
+            {
+                postedFileName = form["ava"];
+            }
+            product.Avatar = postedFileName;
+            product.Price = Int32.Parse(form["price"]);
+            product.Quantity = Int32.Parse(form["quatity"]);
+            product.Name = form["name"];
+            product.Discount = Int32.Parse(form["discount"]);
+            product.Color = form["color"];
+            product.Metatitle = form["metatitle"];
+            product.ID_Trademark = Int32.Parse(form["trademark"]);
+            product.ID_Promotion = Int32.Parse(form["promotion"]);
+            product.Description = form["des"];
+            product.Content = form["content"];
+            con.SaveChanges();
+            return Redirect("/Admin/SanPham?mess=1");
+        }
         /*
         // POST: Admin/ProductAdmin/Delete/5
         [HttpPost]

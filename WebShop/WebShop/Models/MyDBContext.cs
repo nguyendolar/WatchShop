@@ -4,6 +4,8 @@ namespace WebShop.Models
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
+    using System.Data.Entity.ModelConfiguration.Conventions;
+    using System.Data.Entity.Validation;
 
     public partial class MyDBContext : DbContext
     {
@@ -153,6 +155,18 @@ namespace WebShop.Models
             modelBuilder.Entity<User>()
                 .Property(e => e.email)
                 .IsUnicode(false);
+        }
+        public override int SaveChanges()
+        {
+            try
+            {
+                return base.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                string errorMessages = string.Join("; ", ex.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(x => x.PropertyName + ": " + x.ErrorMessage));
+                throw new DbEntityValidationException(errorMessages);
+            }
         }
     }
 }

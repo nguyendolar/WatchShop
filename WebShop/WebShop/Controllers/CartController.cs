@@ -150,7 +150,7 @@ namespace WebShop.Controllers
             var con = new MyDBContext();
 
             hd.CreateDate = DateTime.Now;
-            hd.Status = "completed";
+            hd.Status = "Đang xử lý";
             con.Orders.Add(hd);
             con.SaveChanges();
             var cart = (Cart)Session["CartSession"];
