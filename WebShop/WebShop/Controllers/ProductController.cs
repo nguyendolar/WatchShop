@@ -74,6 +74,127 @@ namespace WebShop.Controllers
             }
         }
 
+        // GET: Product
+        public ActionResult SortDes(int? page, int idt = 0, string s = null)
+        {
+            using (var con = new MyDBContext())
+            {
+                var listprd = new List<Product>();
+                if (string.IsNullOrEmpty(s) && idt == 0)
+                {
+                    listprd = con.Products.OrderByDescending(x => x.Price).ToList();
+                }
+                else if (!string.IsNullOrEmpty(s) && idt == 0)
+                {
+                    listprd = con.Products.Where(x => x.Name.Contains(s)).OrderByDescending(x => x.Price).ToList();
+                }
+                else if (string.IsNullOrEmpty(s) && idt != 0)
+                {
+                    listprd = con.Products.Where(x => x.ID_Trademark == idt).OrderByDescending(x => x.Price).ToList();
+                }
+                else
+                {
+                    listprd = con.Products.Where(x => x.ID_Trademark == idt).Where(x => x.Name.Contains(s)).OrderByDescending(x => x.Price).ToList();
+                }
+                ViewBag.s = s;
+                ViewBag.idt = idt;
+                ViewBag.sortDes = "sortDes";
+                listprd = listprd.OrderByDescending(x => x.Price).ToList();
+                return View("Index", listprd.ToPagedList(page ?? 1, 6));
+            }
+        }
+
+        // GET: Product
+        public ActionResult SortAsc(int? page, int idt = 0, string s = null)
+        {
+            using (var con = new MyDBContext())
+            {
+                var listprd = new List<Product>();
+                if (string.IsNullOrEmpty(s) && idt == 0)
+                {
+                    listprd = con.Products.OrderBy(x => x.Price).ToList();
+                }
+                else if (!string.IsNullOrEmpty(s) && idt == 0)
+                {
+                    listprd = con.Products.Where(x => x.Name.Contains(s)).OrderBy(x => x.Price).ToList();
+                }
+                else if (string.IsNullOrEmpty(s) && idt != 0)
+                {
+                    listprd = con.Products.Where(x => x.ID_Trademark == idt).OrderBy(x => x.Price).ToList();
+                }
+                else
+                {
+                    listprd = con.Products.Where(x => x.ID_Trademark == idt).Where(x => x.Name.Contains(s)).OrderBy(x => x.Price).ToList();
+                }
+                ViewBag.s = s;
+                ViewBag.idt = idt;
+                ViewBag.sortDes = "sortAsc";
+                listprd = listprd.OrderBy(x => x.Price).ToList();
+                return View("Index", listprd.ToPagedList(page ?? 1, 6));
+            }
+        }
+
+
+        // GET: Product
+        public ActionResult AtoZ(int? page, int idt = 0, string s = null)
+        {
+            using (var con = new MyDBContext())
+            {
+                var listprd = new List<Product>();
+                if (string.IsNullOrEmpty(s) && idt == 0)
+                {
+                    listprd = con.Products.OrderBy(x => x.Name).ToList();
+                }
+                else if (!string.IsNullOrEmpty(s) && idt == 0)
+                {
+                    listprd = con.Products.Where(x => x.Name.Contains(s)).OrderBy(x => x.Name).ToList();
+                }
+                else if (string.IsNullOrEmpty(s) && idt != 0)
+                {
+                    listprd = con.Products.Where(x => x.ID_Trademark == idt).OrderBy(x => x.Name).ToList();
+                }
+                else
+                {
+                    listprd = con.Products.Where(x => x.ID_Trademark == idt).Where(x => x.Name.Contains(s)).OrderBy(x => x.Name).ToList();
+                }
+                ViewBag.s = s;
+                ViewBag.idt = idt;
+                ViewBag.sortDes = "atoz";
+                listprd = listprd.OrderBy(x => x.Name).ToList();
+                return View("Index", listprd.ToPagedList(page ?? 1, 6));
+            }
+        }
+
+        // GET: Product
+        public ActionResult ZtoA(int? page, int idt = 0, string s = null)
+        {
+            using (var con = new MyDBContext())
+            {
+                var listprd = new List<Product>();
+                if (string.IsNullOrEmpty(s) && idt == 0)
+                {
+                    listprd = con.Products.OrderByDescending(x => x.Name).ToList();
+                }
+                else if (!string.IsNullOrEmpty(s) && idt == 0)
+                {
+                    listprd = con.Products.Where(x => x.Name.Contains(s)).OrderByDescending(x => x.Name).ToList();
+                }
+                else if (string.IsNullOrEmpty(s) && idt != 0)
+                {
+                    listprd = con.Products.Where(x => x.ID_Trademark == idt).OrderByDescending(x => x.Name).ToList();
+                }
+                else
+                {
+                    listprd = con.Products.Where(x => x.ID_Trademark == idt).Where(x => x.Name.Contains(s)).OrderByDescending(x => x.Name).ToList();
+                }
+                ViewBag.s = s;
+                ViewBag.idt = idt;
+                ViewBag.sortDes = "ztoa";
+                listprd = listprd.OrderByDescending(x => x.Name).ToList();
+                return View("Index", listprd.ToPagedList(page ?? 1, 6));
+            }
+        }
+
         /*
         [HttpPost]
         public ActionResult Index(int? page,int idt =0, string s=null)
@@ -105,17 +226,17 @@ namespace WebShop.Controllers
             }
         }
         */
-            /*
-        [HttpPost]
-        public ActionResult SearchTM(int id,int? page)
+        /*
+    [HttpPost]
+    public ActionResult SearchTM(int id,int? page)
+    {
+        using (var con = new MyDBContext())
         {
-            using (var con = new MyDBContext())
-            {
-                var model = con.Products.Where(x=>x.ID_Trademark == id).OrderByDescending(x => x.ID_Trademark).ToPagedList(page ?? 1, 6);
-                return View("Index", model);
-            }
+            var model = con.Products.Where(x=>x.ID_Trademark == id).OrderByDescending(x => x.ID_Trademark).ToPagedList(page ?? 1, 6);
+            return View("Index", model);
         }
-        */
+    }
+    */
 
         [ChildActionOnly]
         public ActionResult Menu()

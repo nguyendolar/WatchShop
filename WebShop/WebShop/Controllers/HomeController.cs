@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebShop.Models;
 
 namespace WebShop.Controllers
 {
     public class HomeController : Controller
     {
+        MyDBContext con = new MyDBContext();
         public ActionResult Index()
         {
-            return View();
+            var list = con.Products.Take(8).ToList();
+            var listCategory = con.Category.Take(8).ToList();
+            ViewBag.listCategory = listCategory;
+            return View(list);
         }
 
         public ActionResult About()
