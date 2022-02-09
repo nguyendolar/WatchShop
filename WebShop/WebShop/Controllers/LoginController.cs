@@ -29,7 +29,7 @@ namespace WebShop.Controllers
                     Session["Login"] = model;
                     if(string.IsNullOrEmpty(ReturnUrl))
                     {
-                        return Redirect("/Product/Index");
+                        return Redirect("/Admin/SanPham/Index");
                     }
                     else
                     {
