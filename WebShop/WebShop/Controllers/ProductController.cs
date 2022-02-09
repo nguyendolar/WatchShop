@@ -147,7 +147,7 @@ namespace WebShop.Controllers
                 }
                 else if (!string.IsNullOrEmpty(s) && idt == 0)
                 {
-                    listprd = con.Products.Where(x => x.Name.Contains(s)).OrderBy(x => x.Name).ToList();
+                    listprd = con.Products.OrderBy(x => x.Name).ToList();
                 }
                 else if (string.IsNullOrEmpty(s) && idt != 0)
                 {
@@ -259,10 +259,11 @@ namespace WebShop.Controllers
         }
 
         // GET: Product/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, string mess)
         {
             using (var con = new MyDBContext())
             {
+                ViewBag.mes = mess;
                 var model = con.Products.Where(x=>x.ID_Product == id).FirstOrDefault();
                 return View(model);
             }

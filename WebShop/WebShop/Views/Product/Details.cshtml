@@ -13,6 +13,20 @@
         </div>
     </div>
 </div>
+@if (ViewBag.mes != null)
+{
+    <script>
+        swal({
+            title: 'Đã thêm sản phẩm vào giỏ hàng!',
+            /* text: 'Redirecting...', */
+            icon: 'success',
+            timer: 15000,
+            buttons: true,
+            type: 'success'
+        })
+    </script>
+}
+
 <div class="site-section">
     <div class="container">
         <div class="row">
@@ -24,20 +38,8 @@
                 <p>@Model.Description</p>
                 <p><strong class="text-primary h4">@String.Format("{0:0,0 VNĐ}", Model.Price)</strong></p>
                 <p>
-                    <a href="/Cart/AddItem/@Model.ID_Product?ReturnURL=@Request.RawUrl" onclick="showMessage()" class="buy-now btn btn-sm btn-primary">Add To Cart</a>
-                    <script>
-                        function showMessage() {
-                            swal({
-                                title: 'Đã thêm sản phẩm vào giỏ hàng!',
-                                /* text: 'Redirecting...', */
-                                icon: 'success',
-                                timer: 6000,
-                                buttons: true,
-                                type: 'success'
-                            })
+                    <a href="/Cart/AddItem/@Model.ID_Product?ReturnURL=@Request.RawUrl" class="buy-now btn btn-sm btn-primary">Add To Cart</a>
 
-                    }
-                    </script>
                 </p>
 
             </div>

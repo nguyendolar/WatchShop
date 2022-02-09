@@ -61,8 +61,8 @@ namespace WebShop.Controllers
             {
                 return RedirectToAction("Index");
             }
-
-            return Redirect(returnURL);
+            var url = returnURL + "?mess=success";
+            return Redirect(url);
         }
 
 

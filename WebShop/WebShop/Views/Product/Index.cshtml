@@ -37,8 +37,8 @@
                                     <a class="dropdown-item" href="/Product/AtoZ?page=1&idt=0">Name, A to Z</a>
                                     <a class="dropdown-item" href="/Product/ZtoA?page=1&idt=0">Name, Z to A</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/Product/SortDes?page=1&idt=0">Price, low to high</a>
-                                    <a class="dropdown-item" href="/Product/SortAsc?page=1&idt=0">Price, high to low</a>
+                                    <a class="dropdown-item" href="/Product/SortAsc?page=1&idt=0">Price, low to high</a>
+                                    <a class="dropdown-item" href="/Product/SortDes?page=1&idt=0">Price, high to low</a>
                                 </div>
                             </div>
                         </div>
@@ -72,6 +72,14 @@
                                 {
                                     <li><span>@Html.PagedListPager(Model, page => Url.Action("SortAsc", new { page, idt = ViewBag.idt, s = ViewBag.s }))</span></li>
                                 }
+                                else if (ViewBag.sortDes == "atoz")
+                                {
+                                    <li><span>@Html.PagedListPager(Model, page => Url.Action("AtoZ", new { page, idt = ViewBag.idt, s = ViewBag.s }))</span></li>
+                                }
+                                else if (ViewBag.sortDes == "ztoa")
+                                {
+                                    <li><span>@Html.PagedListPager(Model, page => Url.Action("ZtoA", new { page, idt = ViewBag.idt, s = ViewBag.s }))</span></li>
+                                }
                                 else
                                 {
                                     <li><span>@Html.PagedListPager(Model, page => Url.Action("Index", new { page, idt = ViewBag.idt, s = ViewBag.s }))</span></li>
@@ -92,8 +100,11 @@
                 <div class="border p-4 rounded mb-4">
                     <div class="mb-4">
                         <h3 class="mb-3 h6 text-uppercase text-black d-block">Filter by Price</h3>
-                        <div id="slider-range" class="border-primary"></div>
-                        <input type="text" name="text" id="amount" class="form-control border-0 pl-0 bg-white" disabled="" />
+                        <form action="" method="post">
+                            <input type="text" name="text" class="form-control border-1 bg-black" placeholder="Giá ban đầu" />
+                            <input type="text" name="text" class="form-control border-1 bg-black" placeholder="Giá kết thúc" />
+                            <input type="submit" class="form-control border-1 bg-black" value="Search" />
+                        </form>
                     </div>
                 </div>
             </div>
