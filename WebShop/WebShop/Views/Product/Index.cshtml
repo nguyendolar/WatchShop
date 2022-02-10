@@ -80,6 +80,10 @@
                                 {
                                     <li><span>@Html.PagedListPager(Model, page => Url.Action("ZtoA", new { page, idt = ViewBag.idt, s = ViewBag.s }))</span></li>
                                 }
+                                else if (ViewBag.sortDes == "fromTo")
+                                {
+                                    <li><span>@Html.PagedListPager(Model, page => Url.Action("FromBetweenTo", new { page,from = ViewBag.from,to = ViewBag.to,idt = ViewBag.idt, s = ViewBag.s }))</span></li>
+                                }
                                 else
                                 {
                                     <li><span>@Html.PagedListPager(Model, page => Url.Action("Index", new { page, idt = ViewBag.idt, s = ViewBag.s }))</span></li>
@@ -100,9 +104,10 @@
                 <div class="border p-4 rounded mb-4">
                     <div class="mb-4">
                         <h3 class="mb-3 h6 text-uppercase text-black d-block">Filter by Price</h3>
-                        <form action="" method="post">
-                            <input type="text" name="text" class="form-control border-1 bg-black" placeholder="Giá ban đầu" />
-                            <input type="text" name="text" class="form-control border-1 bg-black" placeholder="Giá kết thúc" />
+                        <form action="/Product/FromBetweenTo" method="get">
+                            <input type="text" name="from" class="form-control border-1 bg-black" placeholder="Giá ban đầu" />
+                            <input type="text" name="to" class="form-control border-1 bg-black" placeholder="Giá kết thúc" />
+                            <input type="hidden" name="idt" value="@ViewBag.category"/>
                             <input type="submit" class="form-control border-1 bg-black" value="Search" />
                         </form>
                     </div>

@@ -79,7 +79,7 @@
                                 @{ var list = new WebShop.Controllers.ProductController().getList();}
                                 @foreach (var item in list)
                                 {
-                                    <li><a href="/Product/Index/@item.ID_Trademark">@item.Name</a></li>
+                                    <li><a href="/Product/Index?idt=@item.ID_Trademark">@item.Name</a></li>
                                 }
                             </ul>
                         </li>

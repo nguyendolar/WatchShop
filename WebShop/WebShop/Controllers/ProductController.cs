@@ -61,10 +61,12 @@ namespace WebShop.Controllers
                 }
                 else if(string.IsNullOrEmpty(s) && idt != 0)
                 {
+                    ViewBag.category = idt;
                     listprd = con.Products.Where(x => x.ID_Trademark == idt).OrderBy(x => x.ID_Product).ToList();
                 }
                 else
                 {
+                    ViewBag.category = idt;
                     listprd = con.Products.Where(x => x.ID_Trademark == idt).Where(x => x.Name.Contains(s)).OrderBy(x => x.ID_Product).ToList();
                 }
                 ViewBag.s = s;
@@ -191,6 +193,40 @@ namespace WebShop.Controllers
                 ViewBag.idt = idt;
                 ViewBag.sortDes = "ztoa";
                 listprd = listprd.OrderByDescending(x => x.Name).ToList();
+                return View("Index", listprd.ToPagedList(page ?? 1, 6));
+            }
+        }
+
+        public ActionResult FromBetweenTo(int? page, int idt = 0, string s = null,string from = null,string to = null)
+        {
+           
+            decimal fromPrice = Convert.ToDecimal(from);
+            decimal toPrice = Convert.ToDecimal(to);
+            using (var con = new MyDBContext())
+            {
+                var listprd = new List<Product>();
+                if (string.IsNullOrEmpty(s) && idt == 0)
+                {
+                    listprd = con.Products.OrderByDescending(x => x.Name).Where(x => x.Price >= fromPrice && x.Price <= toPrice).ToList();
+                }
+                else if (!string.IsNullOrEmpty(s) && idt == 0)
+                {
+                    listprd = con.Products.Where(x => x.Name.Contains(s)).OrderByDescending(x => x.Name).Where(x => x.Price >= fromPrice && x.Price <= toPrice).ToList();
+                }
+                else if (string.IsNullOrEmpty(s) && idt != 0)
+                {
+                    listprd = con.Products.Where(x => x.ID_Trademark == idt).OrderByDescending(x => x.Name).Where(x => x.Price >= fromPrice && x.Price <= toPrice).ToList();
+                }
+                else
+                {
+                    listprd = con.Products.Where(x => x.ID_Trademark == idt).Where(x => x.Name.Contains(s)).OrderByDescending(x => x.Name).Where(x => x.Price >= fromPrice && x.Price <= toPrice).ToList();
+                }
+                ViewBag.s = s;
+                ViewBag.idt = idt;
+                ViewBag.sortDes = "fromTo";
+                ViewBag.from = fromPrice;
+                ViewBag.to = toPrice;
+                listprd = listprd.OrderByDescending(x => x.Name).Where(x => x.Price >= fromPrice && x.Price <= toPrice).ToList();
                 return View("Index", listprd.ToPagedList(page ?? 1, 6));
             }
         }
